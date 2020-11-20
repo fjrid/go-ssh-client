@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"net"
 	"os"
-
-	"golang.org/x/crypto/ssh"
+	"strings"
 )
 
 //Client for saving state client ssh
@@ -16,7 +17,7 @@ type Client struct {
 
 func main() {
 
-	key, err := ioutil.ReadFile("path_to_private_key")
+	key, err := ioutil.ReadFile("/home/fajar/.ssh/id_rsa")
 
 	if err != nil {
 		panic(fmt.Errorf("Error reading key: %v", err))
@@ -41,7 +42,7 @@ func main() {
 		),
 	}
 
-	client, err := Dial("127.0.0.1:22", configuration)
+	client, err := Dial("beta.doogether.id:22", configuration)
 
 	if err != nil {
 		panic(fmt.Errorf("Erro dialing server: %v", err))
@@ -58,13 +59,21 @@ func main() {
 	defer session.Close()
 
 	session.Stdin = os.Stdin
-	session.Stdout = os.Stdout
+	// session.Stdout = os.Stdout
 	session.Stderr = os.Stderr
 
-	err = session.Run("ls")
+	reader := bufio.NewReader(os.Stdin)
 
-	if err != nil {
-		panic(fmt.Errorf("Erro executing command: %v", err))
+	for {
+		text, _ := reader.ReadString('\n')
+
+		text = strings.Replace(text, "\n", "", -1)
+
+		err = session.Run(text)
+
+		if err != nil {
+			panic(fmt.Errorf("Erro executing command: %v", err))
+		}
 	}
 
 	fmt.Printf("Finish\n")
