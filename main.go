@@ -67,7 +67,7 @@ func main() {
 	for {
 		text, _ := reader.ReadString('\n')
 
-		text = strings.Replace(text, "\n", "", -1)
+		text = strings.ReplaceAll(text, "\n", "")
 
 		err = session.Run(text)
 
