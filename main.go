@@ -20,13 +20,13 @@ func main() {
 	key, err := ioutil.ReadFile("/home/fajar/.ssh/id_rsa")
 
 	if err != nil {
-		panic(fmt.Errorf("Error reading key: %v", err))
+		panic(fmt.Errorf("error reading key: %v", err))
 	}
 
 	publicKey, err := ssh.ParsePrivateKey(key)
 
 	if err != nil {
-		panic(fmt.Errorf("Error parsing key: %v", err))
+		panic(fmt.Errorf("error parsing key: %v", err))
 	}
 
 	configuration := &ssh.ClientConfig{
@@ -45,7 +45,7 @@ func main() {
 	client, err := Dial("beta.doogether.id:22", configuration)
 
 	if err != nil {
-		panic(fmt.Errorf("Erro dialing server: %v", err))
+		panic(fmt.Errorf("erro dialing server: %v", err))
 	}
 
 	defer client.client.Close()
@@ -53,7 +53,7 @@ func main() {
 	session, err := client.client.NewSession()
 
 	if err != nil {
-		panic(fmt.Errorf("Erro creating session: %v", err))
+		panic(fmt.Errorf("erro creating session: %v", err))
 	}
 
 	defer session.Close()
@@ -72,7 +72,7 @@ func main() {
 		err = session.Run(text)
 
 		if err != nil {
-			panic(fmt.Errorf("Erro executing command: %v", err))
+			panic(fmt.Errorf("erro executing command: %v", err))
 		}
 	}
 
